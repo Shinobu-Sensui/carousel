@@ -1,4 +1,6 @@
 import { createElement, addAttributes } from "../utils/dom.js";
+import handlerClickImg from '../handler/handlerClickImg.js'
+
 
 export default class Thumbnail {
 	/**
@@ -29,6 +31,7 @@ export default class Thumbnail {
 				src: `${this.serverDirectoryImgs}/${url}`,
 			});
 
+			handlerClickImg(containerImg)
 			fragment.appendChild(containerImg);
 		});
 
