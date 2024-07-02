@@ -7,7 +7,7 @@ export default {
   bilateral: `
         <svg xmlns="http://www.w3.org/2000/svg" width="192" height="121" viewBox="0 0 192 121">
             <g id="Groupe_2" data-name="Groupe 2" transform="translate(-842.5 -1235.582)">
-            <rect id="Rectangle_13" data-name="Rectangle 13" width="191" height="121" transform="translate(842.5 1235.582) fill="transparent"/>
+            <rect id="Rectangle_13" data-name="Rectangle 13" width="191" height="121" transform="translate(842.5 1235.582)" fill="transparent"/>
             <path id="Rectangle_13_-_Contour" data-name="Rectangle 13 - Contour" d="M1,1V120H190V1H1M0,0H191V121H0Z" transform="translate(842.5 1235.582)" fill="#707070"/>
             <line id="Ligne_9" data-name="Ligne 9" x2="191" transform="translate(843.5 1296.082)" fill="none" stroke="#707070" stroke-width="1"/>
             </g>

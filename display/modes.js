@@ -1,7 +1,7 @@
 import modes from "../asset/svg/js/modes.js";
 import { qs, createElement } from "../utils/dom.js";
 
-const displayModes = () => {
+export default () => {
     const containerModes = qs('.containerModes')
     if (!modes) return 
 
@@ -12,4 +12,3 @@ const displayModes = () => {
     })
 }
 
-displayModes()

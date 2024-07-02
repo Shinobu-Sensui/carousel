@@ -36,7 +36,6 @@ export const addAttributes = (element, attributes) => {
 
 	if (!isValidElement || !isValidAttributes) return false;
 
-	console.log("yes");
 	Object.entries(attributes).forEach(([key, value]) => {
 		element.setAttribute(key, value);
 	});

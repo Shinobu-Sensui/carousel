@@ -1,8 +1,8 @@
-import FetchFailed from "../error/FetchFailed.js";
 import Thumbnail from "../model/Thumbnail.js";
 import { createElement, qs } from "../utils/dom.js";
+import { data } from "../app.js";
 
-const imgCount = qs('.imgCount')
+const imgCount = qs(".imgCount");
 
 const carouselThumbnails = createElement(
 	"div",
@@ -10,34 +10,60 @@ const carouselThumbnails = createElement(
 	"carouselThumbnails",
 );
 
-const loadThumbnail = (data) => {
-	const message = `${data.length} image${data.length > 1 ? "s enregistrées" : "enregistrée"}`
-	const thumbnailInstance = new Thumbnail(data.slice(0, 5));
+/**
+ * Gère les déplacements des miniatures
+ */
+const thumbnailIndex = {
+	partStart: 0,
+	partEnd: 5,
+	current: 0,
+
+	next() {
+		this.partStart += 5;
+		this.partEnd = this.partStart + 5;
+		if (this.partEnd > data.length) {
+			this.partStart = 0
+			this.partEnd = 5 
+		}
+	},
+
+	preced() {
+		this.partStart -= 5;
+		this.partEnd = this.partStart + 5;
+
+		if (this.partStart < 0) {
+			this.partEnd = data.length;
+			this.partStart = data.length - 5;
+		}	
+	}
+};
+
+/**
+ * Actualise les miniatures
+ * @param {Array} data Tableau des url des images
+ * @param {Number} start nombre du début
+ * @param {Number} end nombre de fin
+ */
+
+const loadThumbnail = (data, start, end) => {
+	carouselThumbnails.innerHTML = "";
+	const message = `${data.length} image${
+		data.length > 1 ? "s enregistrées" : "enregistrée"
+	}`;
+	const thumbnailInstance = new Thumbnail(data, start, end);
 	const fragment = thumbnailInstance.create();
 
-	imgCount.textContent = message
-	
+	imgCount.textContent = message;
 	carouselThumbnails.appendChild(fragment);
 };
 
+/**
+ * Affiche les miniatures
+ */
 
-const displayThumbnails = async () => {
-	try {
-		const response = await fetch("../data/dragonball.json");
+export const displayThumbnails = async (data) => {
+	carouselThumbnails.innerHTML = "";
+	loadThumbnail(data, thumbnailIndex.partStart, thumbnailIndex.partEnd);
+};
 
-		if (!response.ok) {
-			throw new FetchFailed();
-		}
-	
-		const imageUrls = await response.json();
-
-		if (imageUrls.length) {
-			loadThumbnail(imageUrls);
-		}
-
-	} catch (error) {
-		console.error("Une erreur est survenue : ", error);
-	}
-}
-
-displayThumbnails();
+export { loadThumbnail, thumbnailIndex };

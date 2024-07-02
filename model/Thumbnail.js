@@ -1,40 +1,55 @@
 import { createElement, addAttributes } from "../utils/dom.js";
-import handlerClickImg from '../handler/handlerClickImg.js'
-
+import handlerClickImg from '../handler/handlerClickImg.js';
 
 export default class Thumbnail {
-	/**
-	 * @param {Array} arrayURL - Les URL des images pour les miniatures.
-	 */
-	constructor(arrayURL) {
-		if (!Array.isArray(arrayURL)) {
-			throw new Error("Passez un tableau en paramètre.");
-		}
-		this.arrayURL = arrayURL;
-		this.serverDirectoryImgs = "https://khayyer.io/dbz-img";
-	}
+    /**
+     * @param {string[]} arrayURL - Les URL des images pour les miniatures.
+     * @param {number} start - Index de début pour le slice du tableau (inclus).
+     * @param {number} end - Index de fin pour le slice du tableau (exclus).
+     */
+    constructor(arrayURL, start = 0, end = arrayURL.length) {
+        if (!Array.isArray(arrayURL)) {
+            throw new TypeError("Le premier argument doit être un tableau d'URLs.");
+        }
+        this.arrayURL = arrayURL;
+        this.start = Math.max(0, Math.min(start, arrayURL.length));
+        this.end = Math.max(this.start, Math.min(end, arrayURL.length));
+        this.serverDirectoryImgs = "https://khayyer.io/dbz-img";
+    }
 
-	/**
-	 * Crée des éléments DOM représentant les miniatures.
-	 * @returns {DocumentFragment} - Un fragment contenant toutes les images miniatures.
-	 */
-	create() {
-		const fragment = document.createDocumentFragment();
+    /**
+     * Crée un élément image miniature.
+     * @param {string} url - L'URL de l'image.
+     * @param {number} index - L'index de l'image dans le tableau original.
+     * @returns {HTMLElement} - L'élément conteneur de l'image.
+     * @private
+     */
+    _createThumbnailElement(url, index) {
+        const containerImg = createElement("div", null, "container_img");
+        const img = createElement("img", containerImg);
+		addAttributes(img, { 
+			loading:"lazy"
+		})
 
-		this.arrayURL.forEach((url) => {
-			const containerImg = createElement("div");
-			const img = createElement("img", containerImg);
+        containerImg.dataset.index = this.start + index;
+        addAttributes(img, { src: `${this.serverDirectoryImgs}/${url}`, alt: `Thumbnail ${index + 1}` });
 
-			containerImg.classList.add("container_img");
+        handlerClickImg(containerImg);
+        return containerImg;
+    }
 
-			addAttributes(img, {
-				src: `${this.serverDirectoryImgs}/${url}`,
-			});
+    /**
+     * Crée des éléments DOM représentant les miniatures.
+     * @returns {DocumentFragment} - Un fragment contenant toutes les images miniatures.
+     */
+    create() {
+        const fragment = document.createDocumentFragment();
 
-			handlerClickImg(containerImg)
-			fragment.appendChild(containerImg);
-		});
+        this.arrayURL.slice(this.start, this.end).forEach((url, index) => {
+            const thumbnailElement = this._createThumbnailElement(url, index);
+            fragment.appendChild(thumbnailElement);
+        });
 
-		return fragment;
-	}
+        return fragment;
+    }
 }
