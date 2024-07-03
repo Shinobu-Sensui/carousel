@@ -1,14 +1,11 @@
 import Thumbnail from "../model/Thumbnail.js";
-import { createElement, qs } from "../utils/dom.js";
+import { qs } from "../utils/dom.js";
 import { data } from "../app.js";
 
+const carouselThumbnails = document.createElement('div')
 const imgCount = qs(".imgCount");
+carouselThumbnails.classList.add("carouselThumbnails")
 
-const carouselThumbnails = createElement(
-	"div",
-	document.body,
-	"carouselThumbnails",
-);
 
 /**
  * Gère les déplacements des miniatures
@@ -17,13 +14,14 @@ const thumbnailIndex = {
 	partStart: 0,
 	partEnd: 5,
 	current: 0,
+	step: 5,
 
 	next() {
 		this.partStart += 5;
 		this.partEnd = this.partStart + 5;
 		if (this.partEnd > data.length) {
-			this.partStart = 0
-			this.partEnd = 5 
+			this.partStart = 0;
+			this.partEnd = 5;
 		}
 	},
 
@@ -34,8 +32,8 @@ const thumbnailIndex = {
 		if (this.partStart < 0) {
 			this.partEnd = data.length;
 			this.partStart = data.length - 5;
-		}	
-	}
+		}
+	},
 };
 
 /**
@@ -62,6 +60,8 @@ const loadThumbnail = (data, start, end) => {
  */
 
 export const displayThumbnails = async (data) => {
+	qs('.navigation-instructions').insertAdjacentElement('beforebegin', carouselThumbnails)	  
+
 	carouselThumbnails.innerHTML = "";
 	loadThumbnail(data, thumbnailIndex.partStart, thumbnailIndex.partEnd);
 };

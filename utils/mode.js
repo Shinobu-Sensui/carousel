@@ -3,10 +3,11 @@ import { getCurrentMode } from "../handler/handleClickModes.js";
 import { createElement, qs, addAttributes } from "./dom.js";
 
 const scene = qs(".scene");
+
 let intervalId = null;
 
 const PATH_SERVER_DIRECTORY = "https://khayyer.io/dbz-img/";
-const INFINITY_INTERVAL = 2000;
+const INFINITY_INTERVAL = 1500;
 
 /**
  * Crée et insère une image dans la scène
@@ -39,6 +40,7 @@ const handleInfinityMode = (img, data) => {
  * @param {number} startIndex Index de départ dans le tableau data
  */
 export const transformScene = (data, startIndex) => {
+
 	clearInterval(intervalId);
 	scene.innerHTML = "";
 
